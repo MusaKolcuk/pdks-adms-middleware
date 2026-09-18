@@ -11,6 +11,18 @@ app.use((req, res, next) => {
   next();
 });
 
+// Basit CORS: test/izleme araci gibi taraycidan (baska bir origin'den) bu
+// API'ye istek atabilmek icin. Cihazlarin kendisi tarayici olmadigi icin
+// bundan etkilenmiyor; sadece kendi test arayuzumuz gibi web sayfalarinin
+// bu API'yi cagirabilmesini sagliyor.
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, x-api-key');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
 // Kart okuyucu cihazlarin konustugu ADMS/Push protokolu endpoint'leri.
 // Cihazin "sunucu adresi" ayarina bu servisin adresini + /iclock on ekini
 // yazmaniz gerekir (bkz. README).
